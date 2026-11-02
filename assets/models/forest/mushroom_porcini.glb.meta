@@ -1,0 +1,143 @@
+{
+  "ver": "2.3.14",
+  "importer": "gltf",
+  "imported": true,
+  "uuid": "23c34b81-503a-47b1-9e8b-22e932873348",
+  "files": [],
+  "subMetas": {
+    "68ffe": {
+      "importer": "gltf-mesh",
+      "uuid": "23c34b81-503a-47b1-9e8b-22e932873348@68ffe",
+      "displayName": "",
+      "id": "68ffe",
+      "name": "mushroom_porcini.mesh",
+      "userData": {
+        "gltfIndex": 0,
+        "triangleCount": 104
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "57e05": {
+      "importer": "gltf-embeded-image",
+      "uuid": "23c34b81-503a-47b1-9e8b-22e932873348@57e05",
+      "displayName": "",
+      "id": "57e05",
+      "name": "palette.image",
+      "userData": {
+        "gltfIndex": 0,
+        "fixAlphaTransparencyArtifacts": true,
+        "hasAlpha": false,
+        "type": "texture"
+      },
+      "ver": "1.0.3",
+      "imported": true,
+      "files": [
+        ".json",
+        ".png"
+      ],
+      "subMetas": {}
+    },
+    "e39f7": {
+      "importer": "texture",
+      "uuid": "23c34b81-503a-47b1-9e8b-22e932873348@e39f7",
+      "displayName": "",
+      "id": "e39f7",
+      "name": "UnnamedTexture.texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "nearest",
+        "magfilter": "nearest",
+        "mipfilter": "nearest",
+        "anisotropy": 0,
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "23c34b81-503a-47b1-9e8b-22e932873348@57e05"
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "a4376": {
+      "importer": "gltf-material",
+      "uuid": "23c34b81-503a-47b1-9e8b-22e932873348@a4376",
+      "displayName": "",
+      "id": "a4376",
+      "name": "forest_palette.material",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "58b03": {
+      "importer": "gltf-scene",
+      "uuid": "23c34b81-503a-47b1-9e8b-22e932873348@58b03",
+      "displayName": "",
+      "id": "58b03",
+      "name": "mushroom_porcini.prefab",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "imageMetas": [
+      {
+        "name": "palette",
+        "uri": "23c34b81-503a-47b1-9e8b-22e932873348@57e05"
+      }
+    ],
+    "lods": {
+      "enable": false,
+      "hasBuiltinLOD": false,
+      "options": [
+        {
+          "screenRatio": 0.25,
+          "faceCount": 1
+        },
+        {
+          "screenRatio": 0.125,
+          "faceCount": 0.25
+        },
+        {
+          "screenRatio": 0.01,
+          "faceCount": 0.1
+        }
+      ]
+    },
+    "assetFinder": {
+      "meshes": [
+        "23c34b81-503a-47b1-9e8b-22e932873348@68ffe"
+      ],
+      "skeletons": [],
+      "textures": [
+        "23c34b81-503a-47b1-9e8b-22e932873348@e39f7"
+      ],
+      "materials": [
+        "23c34b81-503a-47b1-9e8b-22e932873348@a4376"
+      ],
+      "scenes": [
+        "23c34b81-503a-47b1-9e8b-22e932873348@58b03"
+      ]
+    }
+  }
+}
