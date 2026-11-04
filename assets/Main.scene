@@ -316,6 +316,7 @@
     "lookHeight": 1.2,
     "followSharpness": 8,
     "rotateSpeed": 0.3,
+    "invertY": false,
     "zoomSpeed": 0.005,
     "distance": 6,
     "minDistance": 3,
