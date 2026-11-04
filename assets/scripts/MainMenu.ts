@@ -1,7 +1,14 @@
-import { _decorator, Component, Node, Label, Button, ProgressBar, JsonAsset, director, resources } from 'cc';
+import { _decorator, Component, Node, Label, Button, EditBox, ProgressBar, JsonAsset, director, resources, screen, sys } from 'cc';
 import { gameEvents, GameEvent } from './GameEvents';
 import { basket } from './Basket';
 import { formatCounts } from './Species';
+import { session, GameMode } from './Session';
+import { setupScreen } from './ScreenSetup';
+import { wakeServer } from './ServerConfig';
+
+const CODE_LENGTH = 4;
+// вужча заливка ламає заокруглені кінці 9-slice (відступи 14 + 14 px)
+const MIN_FILL_WIDTH = 28;
 const { ccclass, property } = _decorator;
 
 @ccclass( 'MainMenu' )
@@ -16,8 +23,17 @@ export class MainMenu extends Component
   @property( { type: Label, tooltip: 'Випадкова порада з resources/tips.json' } )
   tipLabel: Label | null = null;
 
-  @property( { type: Node, tooltip: 'Кнопка «Грати»' } )
+  @property( { type: Node, tooltip: 'Кнопка «Грати самому»' } )
   playButton: Node | null = null;
+
+  @property( { type: Node, tooltip: 'Кнопка «Створити кімнату»' } )
+  createButton: Node | null = null;
+
+  @property( { type: Node, tooltip: 'Кнопка «Приєднатися»' } )
+  joinButton: Node | null = null;
+
+  @property( { type: EditBox, tooltip: 'Поле для коду кімнати друга' } )
+  codeInput: EditBox | null = null;
 
   @property( { type: Node, tooltip: 'Кнопка «Скинути прогрес»' } )
   resetButton: Node | null = null;
@@ -29,6 +45,9 @@ export class MainMenu extends Component
 
   onLoad()
   {
+    setupScreen();
+    // поки гравець у меню, сервер на хостингу встигає прокинутись
+    wakeServer();
     if ( this.loadingBar ) this.loadingBar.node.active = false;
     this.refreshTotal();
     this.loadTip();
@@ -37,6 +56,8 @@ export class MainMenu extends Component
   onEnable()
   {
     this.playButton?.on( Button.EventType.CLICK, this.onPlayClick, this );
+    this.createButton?.on( Button.EventType.CLICK, this.onCreateClick, this );
+    this.joinButton?.on( Button.EventType.CLICK, this.onJoinClick, this );
     this.resetButton?.on( Button.EventType.CLICK, this.onResetClick, this );
     gameEvents.on( GameEvent.BasketChanged, this.refreshTotal, this );
   }
@@ -44,26 +65,52 @@ export class MainMenu extends Component
   onDisable()
   {
     this.playButton?.off( Button.EventType.CLICK, this.onPlayClick, this );
+    this.createButton?.off( Button.EventType.CLICK, this.onCreateClick, this );
+    this.joinButton?.off( Button.EventType.CLICK, this.onJoinClick, this );
     this.resetButton?.off( Button.EventType.CLICK, this.onResetClick, this );
     gameEvents.off( GameEvent.BasketChanged, this.refreshTotal, this );
   }
 
   private onPlayClick()
   {
+    this.startGame( 'solo' );
+  }
+
+  private onCreateClick()
+  {
+    this.startGame( 'create' );
+  }
+
+  private onJoinClick()
+  {
+    const code = ( this.codeInput?.string ?? '' ).trim().toUpperCase();
+    if ( code.length !== CODE_LENGTH )
+    {
+      if ( this.tipLabel ) this.tipLabel.string = `Введіть код кімнати з ${CODE_LENGTH} символів`;
+      return;
+    }
+    this.startGame( 'join', code );
+  }
+
+  private startGame( mode: GameMode, code = '' )
+  {
     if ( this._loading ) return;
+    if ( sys.isMobile && screen.supportsFullScreen && !screen.fullScreen() )
+    {
+      // браузер дозволяє повний екран лише у відповідь на дотик — тому саме тут
+      screen.requestFullScreen().catch( () => {} );
+    }
+    session.mode = mode;
+    session.code = code;
     this._loading = true;
     this.setButtonsEnabled( false );
-    if ( this.loadingBar )
-    {
-      this.loadingBar.progress = 0;
-      this.loadingBar.node.active = true;
-    }
+    this.showLoading( true );
 
     director.preloadScene(
       this.gameScene,
       ( completed, total ) =>
       {
-        if ( this.loadingBar && total > 0 ) this.loadingBar.progress = completed / total;
+        if ( total > 0 ) this.setLoadingProgress( completed / total );
       },
       ( error ) =>
       {
@@ -72,12 +119,29 @@ export class MainMenu extends Component
           console.error( `[MainMenu] не вдалося завантажити сцену «${this.gameScene}»`, error );
           this._loading = false;
           this.setButtonsEnabled( true );
-          if ( this.loadingBar ) this.loadingBar.node.active = false;
+          this.showLoading( false );
           return;
         }
         director.loadScene( this.gameScene );
       },
     );
+  }
+
+  // смужка завантаження стоїть на місці кнопки «Скинути прогрес»
+  private showLoading( visible: boolean )
+  {
+    if ( this.resetButton ) this.resetButton.active = !visible;
+    if ( !this.loadingBar ) return;
+    this.loadingBar.node.active = visible;
+    this.setLoadingProgress( 0 );
+  }
+
+  private setLoadingProgress( progress: number )
+  {
+    const bar = this.loadingBar;
+    if ( !bar ) return;
+    bar.progress = progress;
+    if ( bar.barSprite ) bar.barSprite.node.active = progress * bar.totalLength >= MIN_FILL_WIDTH;
   }
 
   private onResetClick()
@@ -105,9 +169,10 @@ export class MainMenu extends Component
 
   private setButtonsEnabled( enabled: boolean )
   {
-    const play = this.playButton?.getComponent( Button );
-    const reset = this.resetButton?.getComponent( Button );
-    if ( play ) play.interactable = enabled;
-    if ( reset ) reset.interactable = enabled;
+    for ( const node of [this.playButton, this.createButton, this.joinButton, this.resetButton] )
+    {
+      const button = node?.getComponent( Button );
+      if ( button ) button.interactable = enabled;
+    }
   }
 }

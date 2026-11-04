@@ -1,5 +1,9 @@
-import { _decorator, Component, Node, Prefab, NodePool, Vec3, instantiate, geometry, PhysicsSystem, math, input, Input, EventKeyboard, KeyCode, CCFloat } from 'cc';
+import { _decorator, Component, Node, Prefab, NodePool, Vec3, instantiate, geometry, PhysicsSystem, math, input, Input, EventKeyboard, KeyCode, CCFloat, Tween, tween } from 'cc';
+import { gameEvents, GameEvent } from './GameEvents';
 const { ccclass, property } = _decorator;
+
+// не 0: нульовий масштаб ламає фізику й нормалі
+const TINY = 0.01;
 
 @ccclass( 'MushroomSpawner' )
 export class MushroomSpawner extends Component
@@ -34,6 +38,9 @@ export class MushroomSpawner extends Component
   @property( { tooltip: 'Через скільки секунд після збору на галявині виростає новий гриб' } )
   respawnDelay = 10;
 
+  @property( { tooltip: 'Скільки триває «виростання» нового гриба, с' } )
+  growTime = 0.4;
+
   @property
   minScale = 1.3;
 
@@ -44,6 +51,9 @@ export class MushroomSpawner extends Component
   private _prefabOf = new Map<Node, Prefab>();
   private _alive: Node[] = [];
   private _created = 0;
+  private _remote = false;
+  private _byId = new Map<string, Node>();
+  private _idOf = new Map<Node, string>();
 
   private _ray = new geometry.Ray();
   private _point = new Vec3();
@@ -70,8 +80,55 @@ export class MushroomSpawner extends Component
     if ( event.keyCode === KeyCode.KEY_R ) this.reseed();
   }
 
+  get isRemote()
+  {
+    return this._remote;
+  }
+
+  /** Гриби тепер вирощує сервер: свої прибираємо й самі більше не садимо. */
+  useRemote()
+  {
+    this._remote = true;
+    this.unscheduleAllCallbacks();
+    for ( const mushroom of [...this._alive] ) this.despawn( mushroom );
+  }
+
+  /** Зʼєднання з сервером втрачено — знову вирощуємо самі. */
+  useLocal()
+  {
+    if ( !this._remote ) return;
+    this._remote = false;
+    for ( const mushroom of [...this._alive] ) this.despawn( mushroom );
+    this.spawnAll();
+  }
+
+  spawnRemote( id: string, species: string, x: number, z: number, yaw: number, scale: number )
+  {
+    const prefab = this.prefabs.find( ( p ) => p.name === species );
+    if ( !prefab || this._byId.has( id ) ) return;
+    this._point.set( x, 0, z );
+    const mushroom = this.place( prefab, this._point );
+    mushroom.setRotationFromEuler( 0, yaw, 0 );
+    this.grow( mushroom, scale );
+    this._byId.set( id, mushroom );
+    this._idOf.set( mushroom, id );
+  }
+
+  removeRemote( id: string )
+  {
+    const mushroom = this._byId.get( id );
+    if ( !mushroom ) return;
+    this.despawn( mushroom, true );
+  }
+
+  idOf( mushroom: Node ): string | null
+  {
+    return this._idOf.get( mushroom ) ?? null;
+  }
+
   spawnAll()
   {
+    if ( this._remote ) return;
     while ( this._alive.length < this.count )
     {
       if ( !this.spawnOne() ) break;
@@ -96,6 +153,7 @@ export class MushroomSpawner extends Component
 
   reseed()
   {
+    if ( this._remote ) return;
     for ( const mushroom of [...this._alive] ) this.despawn( mushroom );
     this.spawnAll();
     const pooled = [...this._pools.values()].map( ( pool ) => pool.size() );
@@ -128,16 +186,38 @@ export class MushroomSpawner extends Component
 
   harvest( mushroom: Node )
   {
-    this.despawn( mushroom );
+    this.despawn( mushroom, true );
     this.scheduleOnce( () => this.spawnAll(), this.respawnDelay );
   }
 
-  despawn( mushroom: Node )
+  /** animated — гриб зібрали: підстрибне й зникне, а на його місці спрацюють ефекти. */
+  despawn( mushroom: Node, animated = false )
   {
     const index = this._alive.indexOf( mushroom );
     if ( index < 0 ) return;
     this._alive.splice( index, 1 );
-    this.poolFor( this._prefabOf.get( mushroom )! ).put( mushroom );
+    const id = this._idOf.get( mushroom );
+    if ( id !== undefined )
+    {
+      this._idOf.delete( mushroom );
+      this._byId.delete( id );
+    }
+    const pool = this.poolFor( this._prefabOf.get( mushroom )! );
+    Tween.stopAllByTarget( mushroom );
+    if ( !animated )
+    {
+      pool.put( mushroom );
+      return;
+    }
+
+    gameEvents.emit( GameEvent.MushroomHarvested, mushroom.worldPosition, this.speciesOf( mushroom ) );
+    const up = mushroom.scale.x * 1.3;
+    // у пул — лише коли анімація скінчилась; зі списку живих гриб уже прибрано, тож його не зберуть двічі
+    tween( mushroom )
+      .to( 0.08, { scale: new Vec3( up, up, up ) }, { easing: 'quadOut' } )
+      .to( 0.15, { scale: new Vec3( TINY, TINY, TINY ) }, { easing: 'backIn' } )
+      .call( () => pool.put( mushroom ) )
+      .start();
   }
 
   private spawnFamily( prefab: Prefab, around: Readonly<Vec3> )
@@ -189,9 +269,16 @@ export class MushroomSpawner extends Component
     mushroom.setWorldPosition( position );
     mushroom.setRotationFromEuler( 0, math.randomRange( 0, 360 ), 0 );
     const scale = math.randomRange( this.minScale, this.maxScale );
-    mushroom.setScale( scale, scale, scale );
+    this.grow( mushroom, scale );
     this._alive.push( mushroom );
     return mushroom;
+  }
+
+  private grow( mushroom: Node, scale: number )
+  {
+    Tween.stopAllByTarget( mushroom );
+    mushroom.setScale( TINY, TINY, TINY );
+    tween( mushroom ).to( this.growTime, { scale: new Vec3( scale, scale, scale ) }, { easing: 'backOut' } ).start();
   }
 
   private randomGroundPoint( out: Vec3, centerX: number, centerZ: number, radius: number ): boolean

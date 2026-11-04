@@ -1,0 +1,279 @@
+{
+  "ver": "2.3.14",
+  "importer": "gltf",
+  "imported": true,
+  "uuid": "ac7a587b-0134-47c9-9075-35d366200e4f",
+  "files": [
+    "__original-animation-0.bin",
+    "__original-animation-1.bin",
+    "__original-animation-2.bin"
+  ],
+  "subMetas": {
+    "57146": {
+      "importer": "gltf-animation",
+      "uuid": "ac7a587b-0134-47c9-9075-35d366200e4f@57146",
+      "displayName": "",
+      "id": "57146",
+      "name": "Walk.animation",
+      "userData": {
+        "gltfIndex": 2,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 0.5333333611488342
+        },
+        "events": []
+      },
+      "ver": "1.0.18",
+      "imported": true,
+      "files": [
+        ".bin"
+      ],
+      "subMetas": {}
+    },
+    "1cbde": {
+      "importer": "gltf-mesh",
+      "uuid": "ac7a587b-0134-47c9-9075-35d366200e4f@1cbde",
+      "displayName": "",
+      "id": "1cbde",
+      "name": "picker_rig.mesh",
+      "userData": {
+        "gltfIndex": 0,
+        "triangleCount": 609
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "c2696": {
+      "importer": "gltf-animation",
+      "uuid": "ac7a587b-0134-47c9-9075-35d366200e4f@c2696",
+      "displayName": "",
+      "id": "c2696",
+      "name": "Idle.animation",
+      "userData": {
+        "gltfIndex": 0,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 2
+        },
+        "events": []
+      },
+      "ver": "1.0.18",
+      "imported": true,
+      "files": [
+        ".bin"
+      ],
+      "subMetas": {}
+    },
+    "9292d": {
+      "importer": "gltf-animation",
+      "uuid": "ac7a587b-0134-47c9-9075-35d366200e4f@9292d",
+      "displayName": "",
+      "id": "9292d",
+      "name": "Run.animation",
+      "userData": {
+        "gltfIndex": 1,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 0.4000000059604645
+        },
+        "events": []
+      },
+      "ver": "1.0.18",
+      "imported": true,
+      "files": [
+        ".bin"
+      ],
+      "subMetas": {}
+    },
+    "f9d1d": {
+      "importer": "gltf-skeleton",
+      "uuid": "ac7a587b-0134-47c9-9075-35d366200e4f@f9d1d",
+      "displayName": "",
+      "id": "f9d1d",
+      "name": "Armature.skeleton",
+      "userData": {
+        "gltfIndex": 0,
+        "jointsLength": 8
+      },
+      "ver": "1.0.1",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "57e05": {
+      "importer": "gltf-embeded-image",
+      "uuid": "ac7a587b-0134-47c9-9075-35d366200e4f@57e05",
+      "displayName": "",
+      "id": "57e05",
+      "name": "palette.image",
+      "userData": {
+        "gltfIndex": 0,
+        "fixAlphaTransparencyArtifacts": true,
+        "hasAlpha": false,
+        "type": "texture"
+      },
+      "ver": "1.0.3",
+      "imported": true,
+      "files": [
+        ".json",
+        ".png"
+      ],
+      "subMetas": {}
+    },
+    "e39f7": {
+      "importer": "texture",
+      "uuid": "ac7a587b-0134-47c9-9075-35d366200e4f@e39f7",
+      "displayName": "",
+      "id": "e39f7",
+      "name": "UnnamedTexture.texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "nearest",
+        "magfilter": "nearest",
+        "mipfilter": "nearest",
+        "anisotropy": 0,
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "ac7a587b-0134-47c9-9075-35d366200e4f@57e05"
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "a4376": {
+      "importer": "gltf-material",
+      "uuid": "ac7a587b-0134-47c9-9075-35d366200e4f@a4376",
+      "displayName": "",
+      "id": "a4376",
+      "name": "forest_palette.material",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "f7987": {
+      "importer": "gltf-scene",
+      "uuid": "ac7a587b-0134-47c9-9075-35d366200e4f@f7987",
+      "displayName": "",
+      "id": "f7987",
+      "name": "picker_rig.prefab",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "imageMetas": [
+      {
+        "name": "palette",
+        "uri": "ac7a587b-0134-47c9-9075-35d366200e4f@57e05"
+      }
+    ],
+    "animationImportSettings": [
+      {
+        "name": "Idle",
+        "duration": 2,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "Idle",
+            "from": 0,
+            "to": 2,
+            "wrapMode": 2,
+            "previousId": "c2696"
+          }
+        ]
+      },
+      {
+        "name": "Run",
+        "duration": 0.4000000059604645,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "Run",
+            "from": 0,
+            "to": 0.4000000059604645,
+            "wrapMode": 2,
+            "previousId": "9292d"
+          }
+        ]
+      },
+      {
+        "name": "Walk",
+        "duration": 0.5333333611488342,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "Walk",
+            "from": 0,
+            "to": 0.5333333611488342,
+            "wrapMode": 2,
+            "previousId": "57146"
+          }
+        ]
+      }
+    ],
+    "lods": {
+      "enable": false,
+      "hasBuiltinLOD": false,
+      "options": [
+        {
+          "screenRatio": 0.25,
+          "faceCount": 1
+        },
+        {
+          "screenRatio": 0.125,
+          "faceCount": 0.25
+        },
+        {
+          "screenRatio": 0.01,
+          "faceCount": 0.1
+        }
+      ]
+    },
+    "assetFinder": {
+      "meshes": [
+        "ac7a587b-0134-47c9-9075-35d366200e4f@1cbde"
+      ],
+      "skeletons": [
+        "ac7a587b-0134-47c9-9075-35d366200e4f@f9d1d"
+      ],
+      "textures": [
+        "ac7a587b-0134-47c9-9075-35d366200e4f@e39f7"
+      ],
+      "materials": [
+        "ac7a587b-0134-47c9-9075-35d366200e4f@a4376"
+      ],
+      "scenes": [
+        "ac7a587b-0134-47c9-9075-35d366200e4f@f7987"
+      ]
+    }
+  }
+}

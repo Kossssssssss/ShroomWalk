@@ -1,0 +1,9 @@
+{
+    "quests": [
+        { "id": "first-basket", "title": "Збери 3 гриби", "species": "", "count": 3, "time": 0 },
+        { "id": "chanterelles", "title": "Збери 5 лисичок", "species": "Chanterelle", "count": 5, "time": 0 },
+        { "id": "porcini-rush", "title": "3 боровики за хвилину", "species": "Porcini", "count": 3, "time": 60 },
+        { "id": "chanterelle-rush", "title": "5 лисичок за 2 хвилини", "species": "Chanterelle", "count": 5, "time": 120 },
+        { "id": "full-basket", "title": "15 грибів за 3 хвилини", "species": "", "count": 15, "time": 180 }
+    ]
+}

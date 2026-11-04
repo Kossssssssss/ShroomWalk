@@ -3,5 +3,8 @@
   "uuid": "c8118acc-3900-4dcf-9025-ce4af835fb41",
   "creator": {
     "version": "3.8.8"
+  },
+  "dependencies": {
+    "@colyseus/sdk": "^0.18.9"
   }
 }
